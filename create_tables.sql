@@ -1,3 +1,9 @@
+-- Créer la base de données user_db
+CREATE DATABASE users_db;
+
+-- Se connecter à la base de données user_db
+\c user_db;
+
 -- Créer la table Utilisateur
 CREATE TABLE Utilisateur (
    id_user SERIAL PRIMARY KEY,
@@ -8,16 +14,23 @@ CREATE TABLE Utilisateur (
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+---new db
+
+-- Créer la base de données trip_db
+CREATE DATABASE trip_db;
+
+-- Se connecter à la base de données trip_db
+\c trip_db;
+
 -- Créer la table Voyage
 CREATE TABLE Voyage (
    id_voyage SERIAL PRIMARY KEY,
-   id_user INT NOT NULL,
+   id_user INT NOT NULL,  -- Référence à l'utilisateur (stocké dans user_db)
    nom_voyage VARCHAR(100) NOT NULL,
    description_voyage TEXT,
    date_debut_voyage DATE NOT NULL,
    date_fin_voyage DATE NOT NULL,
-   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-   FOREIGN KEY (id_user) REFERENCES Utilisateur(id_user)
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Créer la table Activity
@@ -36,11 +49,10 @@ CREATE TABLE Activity (
 -- Créer la table Vote
 CREATE TABLE Vote (
    id_vote SERIAL PRIMARY KEY,
-   id_user INT NOT NULL,
+   id_user INT NOT NULL,  -- Référence à l'utilisateur (stocké dans user_db)
    id_activity INT NOT NULL,
    vote_value INT NOT NULL,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-   FOREIGN KEY (id_user) REFERENCES Utilisateur(id_user),
    FOREIGN KEY (id_activity) REFERENCES Activity(id_activity),
    UNIQUE (id_user, id_activity)
 );
@@ -48,24 +60,30 @@ CREATE TABLE Vote (
 -- Créer la table Inviter
 CREATE TABLE Inviter (
    id_invitation SERIAL PRIMARY KEY,
-   id_user INT NOT NULL,
-   id_user_invite INT NOT NULL,
+   id_user INT NOT NULL,  -- Référence à l'utilisateur (stocké dans user_db)
+   id_user_invite INT NOT NULL,  -- Référence à l'utilisateur (stocké dans user_db)
    id_voyage INT NOT NULL,
    status VARCHAR(50) DEFAULT 'pending',
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-   FOREIGN KEY (id_user) REFERENCES Utilisateur(id_user),
-   FOREIGN KEY (id_user_invite) REFERENCES Utilisateur(id_user),
    FOREIGN KEY (id_voyage) REFERENCES Voyage(id_voyage),
    UNIQUE (id_user, id_user_invite, id_voyage)
 );
 
+
+
+-- new db
+
+-- Créer la base de données message_db
+CREATE DATABASE message_db;
+
+-- Se connecter à la base de données message_db
+\c message_db;
+
 -- Créer la table Message
 CREATE TABLE Message (
    id_message SERIAL PRIMARY KEY,
-   id_user INT NOT NULL,
-   id_voyage INT NOT NULL,
+   id_user INT NOT NULL,  -- Référence à l'utilisateur (stocké dans user_db)
+   id_voyage INT NOT NULL,  -- Référence au voyage (stocké dans trip_db)
    content TEXT NOT NULL,
-   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-   FOREIGN KEY (id_user) REFERENCES Utilisateur(id_user),
-   FOREIGN KEY (id_voyage) REFERENCES Voyage(id_voyage)
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
