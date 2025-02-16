@@ -45,4 +45,25 @@ public class UtilisateurService {
     public Optional<Utilisateur> getUserById(Long id) {
         return utilisateurRepository.findById(id);
     }
+
+    // 🔹 update user
+    public Optional<Utilisateur> updateUser(Long id, String email, String password, String name, String pictureUrl) {
+        return utilisateurRepository.findById(id).map(utilisateur -> {
+            if (email != null && !email.isEmpty()) utilisateur.setEmail(email);
+            if (password != null && !password.isEmpty()) utilisateur.setPasswordHash(passwordEncoder.encode(password));
+            if (name != null && !name.isEmpty()) utilisateur.setName(name);
+            if (pictureUrl != null && !pictureUrl.isEmpty()) utilisateur.setPictureUrl(pictureUrl);
+            return utilisateurRepository.save(utilisateur);
+        });
+    }
+
+    // 🔹 delete user
+    public boolean deleteUser(Long id) {
+        if (utilisateurRepository.existsById(id)) {
+            utilisateurRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+    
 }
