@@ -1,6 +1,7 @@
 package com.tryp.backend.service;
 
 import com.tryp.backend.model.Utilisateur;
+import com.tryp.backend.model.Role;
 import com.tryp.backend.repository.UtilisateurRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,14 @@ public class UtilisateurService {
         if (utilisateurRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("Email déjà utilisé !");
         }
-
+        Role role = Role.USER;
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setEmail(email);
         utilisateur.setPasswordHash(passwordEncoder.encode(password));
         utilisateur.setName(name);
         utilisateur.setPictureUrl(pictureUrl);
         utilisateur.setCreatedAt(LocalDateTime.now());
+        utilisateur.setRole(role);
 
         return utilisateurRepository.save(utilisateur);
     }

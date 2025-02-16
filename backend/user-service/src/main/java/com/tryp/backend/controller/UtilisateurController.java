@@ -1,13 +1,15 @@
 package com.tryp.backend.controller;
 
 import com.tryp.backend.model.Utilisateur;
+import com.tryp.backend.model.Role;
 import com.tryp.backend.service.UtilisateurService;
 import com.tryp.backend.dto.RegisterRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,7 +21,7 @@ public class UtilisateurController {
         this.utilisateurService = utilisateurService;
     }
 
-    // 🔹 register by id
+    // 🔹 inscription accessible a tlm
     @PostMapping("/register")
     public ResponseEntity<Utilisateur> registerUser(@RequestBody RegisterRequest request) {
         Utilisateur utilisateur = utilisateurService.createUser(
@@ -31,32 +33,56 @@ public class UtilisateurController {
         return ResponseEntity.ok(utilisateur);
     }
 
-    // 🔹 get all user
+    // 🔹 seuls les admins peuvent voir tous les users
     @GetMapping
-    public List<Utilisateur> getAllUsers() {
-        return utilisateurService.getAllUsers();
+    public ResponseEntity<List<Utilisateur>> getAllUsers(Authentication authentication) {
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return ResponseEntity.ok(utilisateurService.getAllUsers());
+        }
+        return ResponseEntity.status(403).build(); // Forbidden
     }
 
-    // 🔹 get one user by id
+    // 🔹 accessible à tt les users
     @GetMapping("/{id}")
-    public ResponseEntity<Utilisateur> getUserById(@PathVariable Long id) {
-        return utilisateurService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-    
-    // 🔹 update user
-    @PutMapping("/{id}")
-    public ResponseEntity<Utilisateur> updateUser(@PathVariable Long id, @RequestBody RegisterRequest request) {
-        return utilisateurService.updateUser(id, request.getEmail(), request.getPassword(), request.getName(), request.getPictureUrl())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Utilisateur> getUserById(@PathVariable Long id, Authentication authentication) {
+        Optional<Utilisateur> utilisateur = utilisateurService.getUserById(id);
+        if (utilisateur.isPresent() && (authentication.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ||
+            authentication.getName().equals(utilisateur.get().getEmail()))) {
+
+
+            return ResponseEntity.ok(utilisateur.get());
+        }
+        return ResponseEntity.status(403).build();
     }
 
-    // 🔹 delete user
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        return utilisateurService.deleteUser(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    // 🔹 un user peut modifier son profil, l'admin peut tout modifier
+    @PutMapping("/{id}")
+    public ResponseEntity<Utilisateur> updateUser(@PathVariable Long id, @RequestBody RegisterRequest request, Authentication authentication) {
+        Optional<Utilisateur> utilisateur = utilisateurService.getUserById(id);
+        if (utilisateur.isPresent() && (authentication.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ||
+            authentication.getName().equals(utilisateur.get().getEmail()))) {
+
+
+            return utilisateurService.updateUser(id, request.getEmail(), request.getPassword(), request.getName(), request.getPictureUrl())
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+        return ResponseEntity.status(403).build();
     }
-     
+
+    // 🔹 un user peut supprimer son compte, l'admin peut supprimer tout
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id, Authentication authentication) {
+        Optional<Utilisateur> utilisateur = utilisateurService.getUserById(id);
+        if (utilisateur.isPresent() && (authentication.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ||
+            authentication.getName().equals(utilisateur.get().getEmail()))) {
+
+
+            return utilisateurService.deleteUser(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.status(403).build();
+    }
 }

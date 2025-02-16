@@ -27,4 +27,8 @@ public class Utilisateur {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;  
 }
