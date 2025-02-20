@@ -7,6 +7,7 @@ import com.tryp.backend.dto.RegisterRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class UtilisateurController {
     }
 
     // 🔹 inscription accessible a tlm
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<Utilisateur> registerUser(@RequestBody RegisterRequest request) {
         Utilisateur utilisateur = utilisateurService.createUser(
@@ -34,29 +36,27 @@ public class UtilisateurController {
     }
 
     // 🔹 seuls les admins peuvent voir tous les users
+    
     @GetMapping
     public ResponseEntity<List<Utilisateur>> getAllUsers(Authentication authentication) {
-        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             return ResponseEntity.ok(utilisateurService.getAllUsers());
-        }
-        return ResponseEntity.status(403).build(); // Forbidden
     }
 
     // 🔹 accessible à tt les users
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Utilisateur> getUserById(@PathVariable Long id, Authentication authentication) {
         Optional<Utilisateur> utilisateur = utilisateurService.getUserById(id);
         if (utilisateur.isPresent() && (authentication.getAuthorities().stream()
             .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ||
             authentication.getName().equals(utilisateur.get().getEmail()))) {
-
-
             return ResponseEntity.ok(utilisateur.get());
         }
         return ResponseEntity.status(403).build();
     }
 
     // 🔹 un user peut modifier son profil, l'admin peut tout modifier
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PutMapping("/{id}")
     public ResponseEntity<Utilisateur> updateUser(@PathVariable Long id, @RequestBody RegisterRequest request, Authentication authentication) {
         Optional<Utilisateur> utilisateur = utilisateurService.getUserById(id);
@@ -73,6 +73,7 @@ public class UtilisateurController {
     }
 
     // 🔹 un user peut supprimer son compte, l'admin peut supprimer tout
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id, Authentication authentication) {
         Optional<Utilisateur> utilisateur = utilisateurService.getUserById(id);

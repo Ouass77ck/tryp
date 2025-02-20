@@ -9,32 +9,37 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authorization.AuthorizationDecision;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
-    
+
+    @Autowired
+    private JwtFilter jwtFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            // Ajoute ton JwtFilter avant UsernamePasswordAuthenticationFilter
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/users/register").permitAll()
                 .requestMatchers("/api/auth/login").permitAll()
-                .requestMatchers("/api/users").hasRole("ADMIN") // Seuls les admins peuvent voir tous les users
-                .requestMatchers("/api/users/{id}").hasAnyRole("USER", "ADMIN") // Tous les users peuvent voir leur profil
+                .requestMatchers("/api/users").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/api/users/{id}").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .requestMatchers("/api/users/{id}/delete", "/api/users/{id}/update")
                     .access((authenticationSupplier, context) -> {
-                        Authentication authentication = authenticationSupplier.get(); // 🔥 FIX: On récupère Authentication
+                        Authentication authentication = authenticationSupplier.get();
                         Long userId = Long.valueOf(context.getVariables().get("id"));
                         return new AuthorizationDecision(
                             authentication.getAuthorities().stream()
                                 .anyMatch(grantedAuthority -> 
                                     grantedAuthority.getAuthority().equals("ROLE_ADMIN") || 
-                                    authentication.getName().equals(userId.toString()) // L'utilisateur peut voir son propre profil
+                                    authentication.getName().equals(userId.toString())
                                 )
                         );
-
                     })
                 .anyRequest().authenticated()
             )
@@ -43,13 +48,12 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
+    
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+    
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
