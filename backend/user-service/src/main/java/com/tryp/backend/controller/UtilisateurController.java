@@ -23,7 +23,6 @@ public class UtilisateurController {
     }
 
     // 🔹 inscription accessible a tlm
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<Utilisateur> registerUser(@RequestBody RegisterRequest request) {
         Utilisateur utilisateur = utilisateurService.createUser(
@@ -36,7 +35,7 @@ public class UtilisateurController {
     }
 
     // 🔹 seuls les admins peuvent voir tous les users
-    
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<Utilisateur>> getAllUsers(Authentication authentication) {
             return ResponseEntity.ok(utilisateurService.getAllUsers());
