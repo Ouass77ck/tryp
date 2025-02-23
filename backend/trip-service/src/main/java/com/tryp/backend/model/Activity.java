@@ -14,7 +14,9 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idActivity;
 
-    private Long idVoyage;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_voyage", nullable = false)  // Définit la clé étrangère
+    private Voyage voyage;  // Objet directement lié
 
     @Column(nullable = false)
     private String nomActivity;
