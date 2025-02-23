@@ -1,62 +1,56 @@
 package com.tryp.backend.service;
 
-
-import com.tryp.backend.repository.VoyageRepository;
+import com.tryp.backend.dto.VoyageRequest;
 import com.tryp.backend.model.Voyage;
+import com.tryp.backend.repository.VoyageRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDateTime;
-import java.time.LocalDate;
 
 @Service
+@RequiredArgsConstructor
 public class VoyageService {
 
     private final VoyageRepository voyageRepository;
 
-    public VoyageService(VoyageRepository voyageRepository){
-        this.voyageRepository=voyageRepository;
+    // 🔹 Créer un voyage
+    public Voyage createVoyage(VoyageRequest request) {
+        Voyage voyage = new Voyage();
+        voyage.setIdUser(request.getIdUser());
+        voyage.setNomVoyage(request.getNomVoyage());
+        voyage.setDescriptionVoyage(request.getDescriptionVoyage());
+        voyage.setDateDebutVoyage(request.getDateDebutVoyage());
+        voyage.setDateFinVoyage(request.getDateFinVoyage());
+        voyage.setCreatedAt(LocalDateTime.now());
+
+        return voyageRepository.save(voyage);
     }
 
-    public Voyage createVoyage(Long idUser, String nomVoyage, String descriptionVoyage,
-        LocalDate dateDebutVoyage, LocalDate dateFinVoyage)
-        {
-            Voyage voyage = new Voyage();
-            voyage.setIdUser(idUser);
-            voyage.setNomVoyage(nomVoyage);
-            voyage.setDescriptionVoyage(descriptionVoyage);
-            voyage.setDateDebutVoyage(dateDebutVoyage);
-            voyage.setDateFinVoyage(dateFinVoyage);
-            voyage.setCreatedAt(LocalDateTime.now());
-
-            return voyageRepository.save(voyage);
-        }
-
-         // 🔹 get all trips
-     public List<Voyage> getAllVoyages() {
+    // 🔹 Obtenir tous les voyages
+    public List<Voyage> getAllVoyages() {
         return voyageRepository.findAll();
     }
 
-    // 🔹 get one trip by id
+    // 🔹 Obtenir un voyage par ID
     public Optional<Voyage> getVoyageById(Long id) {
         return voyageRepository.findById(id);
     }
 
-    // 🔹 update user
-    public Optional<Voyage> updateVoyage(Long id, String nomVoyage, String descriptionVoyage,
-        LocalDate dateDebutVoyage, LocalDate dateFinVoyage)
-        {
+    // 🔹 Mettre à jour un voyage
+    public Optional<Voyage> updateVoyage(Long id, VoyageRequest request) {
         return voyageRepository.findById(id).map(voyage -> {
-            if (nomVoyage != null && !nomVoyage.isEmpty()) voyage.setNomVoyage(nomVoyage);
-            if (descriptionVoyage != null && !descriptionVoyage.isEmpty()) voyage.setDescriptionVoyage(descriptionVoyage);
-            if (dateDebutVoyage != null) voyage.setDateDebutVoyage(dateDebutVoyage);
-            if (dateFinVoyage != null) voyage.setDateFinVoyage(dateFinVoyage);
+            if (request.getNomVoyage() != null) voyage.setNomVoyage(request.getNomVoyage());
+            if (request.getDescriptionVoyage() != null) voyage.setDescriptionVoyage(request.getDescriptionVoyage());
+            if (request.getDateDebutVoyage() != null) voyage.setDateDebutVoyage(request.getDateDebutVoyage());
+            if (request.getDateFinVoyage() != null) voyage.setDateFinVoyage(request.getDateFinVoyage());
             return voyageRepository.save(voyage);
         });
-        }
+    }
 
-    // 🔹 delete user
+    // 🔹 Supprimer un voyage
     public boolean deleteVoyage(Long id) {
         if (voyageRepository.existsById(id)) {
             voyageRepository.deleteById(id);
@@ -65,4 +59,3 @@ public class VoyageService {
         return false;
     }
 }
-

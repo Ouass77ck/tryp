@@ -3,8 +3,9 @@ package com.tryp.backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
 
 @Data
 @Entity
@@ -29,4 +30,7 @@ public class Voyage {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "voyage", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Activity> activities= new ArrayList<>();  // Liste des activités associées
 }
