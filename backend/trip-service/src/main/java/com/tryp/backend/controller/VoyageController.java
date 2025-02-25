@@ -66,7 +66,7 @@ public class VoyageController {
         response.setIdVoyage(voyage.getIdVoyage());
         response.setIdUser(voyage.getIdUser());
         response.setNomVoyage(voyage.getNomVoyage());
-        response.setDescriptionVoyage(voyage.getDescriptionVoyage());
+        response.setDescriptionVoyage(voyage.getDescriptionVoyage());   
         response.setDateDebutVoyage(voyage.getDateDebutVoyage());
         response.setDateFinVoyage(voyage.getDateFinVoyage());
 
