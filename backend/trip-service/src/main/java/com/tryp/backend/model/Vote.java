@@ -2,19 +2,20 @@ package com.tryp.backend.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "Vote")
+@Table(name = "Vote", uniqueConstraints = @UniqueConstraint(columnNames = {"idUser", "idActivity"}))
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVote;
 
+    @Column(nullable = false)
     private Long idUser;
+
+    @Column(nullable = false)
     private Long idActivity;
 
     @Column(nullable = false)
