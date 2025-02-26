@@ -6,6 +6,9 @@ import com.tryp.backend.service.VoteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/votes")
 public class VoteController {
@@ -31,5 +34,17 @@ public class VoteController {
     public ResponseEntity<Void> deleteVote(@RequestParam Long idUser, @RequestParam Long idActivity) {
         voteService.deleteVote(idUser, idActivity);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/activity/{idActivity}")
+    public ResponseEntity<List<VoteResponse>> getVotesByActivity(@PathVariable Long idActivity) {
+        List<VoteResponse> votes = voteService.getVotesByActivity(idActivity);
+        return ResponseEntity.ok(votes);
+    }
+
+    @GetMapping("/activity/{idActivity}/score")
+    public ResponseEntity<Integer> getScoreByActivity(@PathVariable Long idActivity) {
+        Integer score = voteService.getScoreByActivity(idActivity);
+        return ResponseEntity.ok(score);
     }
 }

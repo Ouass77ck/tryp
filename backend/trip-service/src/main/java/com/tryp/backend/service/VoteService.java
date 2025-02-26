@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VoteService {
@@ -52,5 +54,15 @@ public class VoteService {
         response.setIdActivity(vote.getIdActivity());
         response.setVoteValue(vote.getVoteValue());
         return response;
+    }
+
+     public List<VoteResponse> getVotesByActivity(Long idActivity) {
+        List<Vote> votes = voteRepository.findByIdActivity(idActivity);
+        return votes.stream().map(this::mapToResponse).collect(Collectors.toList());
+    }
+
+    public Integer getScoreByActivity(Long idActivity) {
+        Integer score = voteRepository.getScoreByActivity(idActivity);
+        return score != null ? score : 0; // Si aucun vote, renvoyer 0
     }
 }
