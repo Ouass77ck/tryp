@@ -34,10 +34,10 @@ public class SecurityConfig {
                         Authentication authentication = authenticationSupplier.get();
                         Long userId = Long.valueOf(context.getVariables().get("id"));
                         return new AuthorizationDecision(
-                            authentication.getAuthorities().stream()
-                                .anyMatch(grantedAuthority -> 
-                                    grantedAuthority.getAuthority().equals("ROLE_ADMIN") || 
-                                    authentication.getName().equals(userId.toString())
+                        authentication.getAuthorities().stream()
+                            .anyMatch(grantedAuthority -> 
+                                grantedAuthority.getAuthority().equals("ROLE_ADMIN") ||
+                                authentication.getName().equals(userId.toString())
                                 )
                         );
                     })

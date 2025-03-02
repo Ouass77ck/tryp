@@ -24,13 +24,11 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/voyages").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/api/voyages/creation").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .requestMatchers("/api/voyages/{id}/get").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                //.requestMatchers("/api/voyages/{id}/delete").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                //.requestMatchers("/api/voyages/{id}/put").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                .requestMatchers("/api/voyages/{id}/delete", "/api/voyages/{id}/update").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                .anyRequest().authenticated()
+                .requestMatchers("/api/voyages/{id}/put").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .requestMatchers("/api/voyages/{id}/delete").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .requestMatchers("/api/voyages/**").hasAuthority("ROLE_ADMIN")
             )
             .formLogin(login -> login.disable())
             .httpBasic(basic -> basic.disable());

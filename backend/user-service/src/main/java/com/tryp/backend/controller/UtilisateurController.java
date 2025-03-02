@@ -48,7 +48,7 @@ public class UtilisateurController {
         Optional<Utilisateur> utilisateur = utilisateurService.getUserById(id);
         if (utilisateur.isPresent() && (authentication.getAuthorities().stream()
             .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ||
-            authentication.getName().equals(utilisateur.get().getEmail()))) {
+            authentication.getName().equals(utilisateur.get().getIdUser().toString()))) {
             return ResponseEntity.ok(utilisateur.get());
         }
         return ResponseEntity.status(403).build();
@@ -61,7 +61,7 @@ public class UtilisateurController {
         Optional<Utilisateur> utilisateur = utilisateurService.getUserById(id);
         if (utilisateur.isPresent() && (authentication.getAuthorities().stream()
             .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ||
-            authentication.getName().equals(utilisateur.get().getEmail()))) {
+            authentication.getName().equals(utilisateur.get().getIdUser().toString()))) {
 
 
             return utilisateurService.updateUser(id, request.getEmail(), request.getPassword(), request.getName(), request.getPictureUrl())
@@ -78,7 +78,7 @@ public class UtilisateurController {
         Optional<Utilisateur> utilisateur = utilisateurService.getUserById(id);
         if (utilisateur.isPresent() && (authentication.getAuthorities().stream()
             .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ||
-            authentication.getName().equals(utilisateur.get().getEmail()))) {
+            authentication.getName().equals(utilisateur.get().getIdUser().toString()))) {
 
 
             return utilisateurService.deleteUser(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();

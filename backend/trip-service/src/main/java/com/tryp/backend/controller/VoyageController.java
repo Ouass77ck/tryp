@@ -39,7 +39,7 @@ public class VoyageController {
     }
 
     // 🔹 Obtenir un voyage par ID
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/get")
     public ResponseEntity<VoyageResponse> getVoyageById(@PathVariable Long id, Authentication authentication) {
         Optional<Voyage> voyage = voyageService.getVoyageById(id);
             return voyage.map(value -> ResponseEntity.ok(convertToResponse(value)))
@@ -47,19 +47,50 @@ public class VoyageController {
     }
 
     // 🔹 Mettre à jour un voyage
-    @PutMapping("/{id}")
-    public ResponseEntity<VoyageResponse> updateVoyage(@PathVariable Long id, @RequestBody VoyageRequest request, Authentication authentication) {
-        Optional<Voyage> voyage = voyageService.updateVoyage(id, request);
-        return voyage.map(value -> ResponseEntity.ok(convertToResponse(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @PutMapping("/{id}/put")
+    public ResponseEntity<VoyageResponse> updateVoyage(@PathVariable Long id, 
+                                                    @RequestBody VoyageRequest request, 
+                                                    Authentication authentication) {
+        Optional<Voyage> existingVoyage = voyageService.getVoyageById(id);
+        if (existingVoyage.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isOwner = authentication.getName().equals(existingVoyage.get().getIdUser().toString());
+        
+        if (isAdmin || isOwner) {
+            Optional<Voyage> updatedVoyage = voyageService.updateVoyage(id, request);
+            return updatedVoyage
+                    .map(value -> ResponseEntity.ok(convertToResponse(value)))
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        }
+        
+        return ResponseEntity.status(403).build();
     }
 
+
     // 🔹 Supprimer un voyage
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<Void> deleteVoyage(@PathVariable Long id, Authentication authentication) {
-        boolean deleted = voyageService.deleteVoyage(id);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        Optional<Voyage> existingVoyage = voyageService.getVoyageById(id);
+        if (existingVoyage.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isOwner = authentication.getName().equals(existingVoyage.get().getIdUser().toString());
+        
+        if (isAdmin || isOwner) {
+            boolean deleted = voyageService.deleteVoyage(id);
+            return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.status(403).build();
     }
+
 
     // 🔹 Convertir un `Voyage` en `VoyageResponse`
     private VoyageResponse convertToResponse(Voyage voyage) {
