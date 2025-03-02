@@ -39,15 +39,15 @@ public class VoyageController {
 
     // 🔹 Obtenir un voyage par ID
     @GetMapping("/{id}")
-    public ResponseEntity<VoyageResponse> getVoyageById(@PathVariable Long id) {
+    public ResponseEntity<VoyageResponse> getVoyageById(@PathVariable Long id, Authentication authentication) {
         Optional<Voyage> voyage = voyageService.getVoyageById(id);
-        return voyage.map(value -> ResponseEntity.ok(convertToResponse(value)))
+            return voyage.map(value -> ResponseEntity.ok(convertToResponse(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // 🔹 Mettre à jour un voyage
     @PutMapping("/{id}")
-    public ResponseEntity<VoyageResponse> updateVoyage(@PathVariable Long id, @RequestBody VoyageRequest request) {
+    public ResponseEntity<VoyageResponse> updateVoyage(@PathVariable Long id, @RequestBody VoyageRequest request, Authentication authentication) {
         Optional<Voyage> voyage = voyageService.updateVoyage(id, request);
         return voyage.map(value -> ResponseEntity.ok(convertToResponse(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -55,7 +55,7 @@ public class VoyageController {
 
     // 🔹 Supprimer un voyage
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteVoyage(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteVoyage(@PathVariable Long id, Authentication authentication) {
         boolean deleted = voyageService.deleteVoyage(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }

@@ -14,15 +14,32 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfig {
+
+    @Autowired
+    private JwtFilter jwtFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()
+            .csrf(csrf -> csrf.disable())
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/voyages/creation").permitAll()
-                .anyRequest().permitAll()
+                .requestMatchers("/api/voyages").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/api/voyages/creation").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .requestMatchers("/api/voyages/{id}/get").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                //.requestMatchers("/api/voyages/{id}/delete").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                //.requestMatchers("/api/voyages/{id}/put").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .requestMatchers("/api/voyages/{id}/delete", "/api/voyages/{id}/update").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .anyRequest().authenticated()
             )
-            .httpBasic(); // Activer Basic Auth
+            .formLogin(login -> login.disable())
+            .httpBasic(basic -> basic.disable());
+
         return http.build();
+    }
+    
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
