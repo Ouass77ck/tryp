@@ -14,9 +14,9 @@ public class JwtUtil {
 
     private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
-   public String generateToken(String email, String role) {
+   public String generateToken(Long id, String role) {
     return Jwts.builder()
-            .setSubject(email)
+            .setSubject(Long.toString(id))
             .claim("role", "ROLE_" + role)  // Ajout du préfixe ROLE_
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -31,15 +31,15 @@ public class JwtUtil {
     }
 
 
-    // Extraire l'email depuis le token
-    public String extractEmail(String token) {
+    // Extraire l'id depuis le token
+    public String extractId(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token).getBody().getSubject();
     }
 
     // Vérifier si le token est valide
-    public boolean validateToken(String token, String email) {
-        return email.equals(extractEmail(token)) && !isTokenExpired(token);
+    public boolean validateToken(String token, Long id) {
+        return id.equals(extractId(token)) && !isTokenExpired(token);
     }
 
     // Vérifier si le token est expiré

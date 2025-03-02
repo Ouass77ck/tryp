@@ -35,11 +35,11 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
         String token = authHeader.substring(7);
 
         try {
-            String email = jwtUtil.extractEmail(token);
+            String id = jwtUtil.extractId(token);
             String role = jwtUtil.extractRole(token);
 
-            if (email != null) {
-                UserDetails userDetails = new User(email, "", Collections.singletonList(new SimpleGrantedAuthority(role)));
+            if (id != null) {
+                UserDetails userDetails = new User(id, "", Collections.singletonList(new SimpleGrantedAuthority(role)));
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);

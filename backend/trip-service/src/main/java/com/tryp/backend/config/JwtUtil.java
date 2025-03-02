@@ -20,15 +20,16 @@ public class JwtUtil {
                 .parseClaimsJws(token).getBody().get("role", String.class);
     }
 
-    public String extractEmail(String token) {
+
+    public String extractId(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token).getBody().getSubject();
     }
 
-    public boolean validateToken(String token, String email) {
-        return email.equals(extractEmail(token)) && !isTokenExpired(token);
+    public boolean validateToken(String token, Long id) {
+        return id.equals(extractId(token)) && !isTokenExpired(token);
+    
     }
-
     private boolean isTokenExpired(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token).getBody().getExpiration().before(new Date());
