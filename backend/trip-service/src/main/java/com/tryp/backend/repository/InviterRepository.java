@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public interface InviterRepository extends JpaRepository<Inviter, Long> {
+    List<Inviter> findByVoyage_IdVoyageAndStatus(Long idVoyage, String status);
     Optional<Inviter> findById(Long idInvitation);
     List<Inviter> findByIdUserInvite(Long idUserInvite);
     boolean existsById(Long idInvitation);

@@ -58,4 +58,15 @@ public class VoyageService {
         }
         return false;
     }
+
+    public boolean isAdminOfTheTravel(Long idUser, Long idVoyage) {
+    Optional<Voyage> voyageOpt = voyageRepository.findById(idVoyage);
+    
+    if (voyageOpt.isPresent()) {
+        return voyageOpt.get().getIdUser().equals(idUser);
+    }
+    
+    return false;
+    }
+
 }

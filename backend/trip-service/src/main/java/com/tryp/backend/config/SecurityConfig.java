@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/voyages/{id}/put").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .requestMatchers("/api/voyages/{id}/delete").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .requestMatchers("/api/voyages/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/api/**").permitAll()
             )
             .formLogin(login -> login.disable())
             .httpBasic(basic -> basic.disable());

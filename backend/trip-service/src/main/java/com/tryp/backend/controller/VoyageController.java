@@ -23,9 +23,17 @@ public class VoyageController {
 
     // 🔹 Créer un voyage
     @PostMapping("/creation")
-    public ResponseEntity<VoyageResponse> createVoyage(@RequestBody VoyageRequest request) {
-        Voyage voyage = voyageService.createVoyage(request);
-        return ResponseEntity.ok(convertToResponse(voyage));
+    public ResponseEntity<VoyageResponse> createVoyage(@RequestBody VoyageRequest request, Authentication authentication) {
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isOwner = authentication.getName().equals(request.getIdUser().toString());
+
+        if (isAdmin || isOwner){ //stv creer un voyage a un utilisqteur tu dois soit etre admin ou etre cet utilisateur
+            Voyage voyage = voyageService.createVoyage(request);
+            return ResponseEntity.ok(convertToResponse(voyage));    
+        }
+        return ResponseEntity.status(403).build();
     }
 
     // 🔹 Obtenir tous les voyages

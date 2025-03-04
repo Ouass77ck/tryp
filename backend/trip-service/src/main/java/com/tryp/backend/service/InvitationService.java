@@ -82,4 +82,9 @@ public class InvitationService {
         inviterRepository.deleteById(invitationId);
     }
 
+    public List<InvitationResponse> getAcceptedInvitationsByVoyage(Long idVoyage) {
+    List<Inviter> acceptedInvitations = inviterRepository.findByVoyage_IdVoyageAndStatus(idVoyage, "accepted");
+    return acceptedInvitations.stream().map(this::mapToResponse).collect(Collectors.toList());
+}
+
 }
