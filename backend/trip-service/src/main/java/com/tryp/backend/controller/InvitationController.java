@@ -93,4 +93,18 @@ public class InvitationController {
         }
         return ResponseEntity.status(403).build();
 }
+
+    // here we need a function that takes one trip and responds with everyone who accepted the invitation
+   @GetMapping("/voyage/{idVoyage}")
+    public ResponseEntity<List<InvitationResponse>> getInvitationsByTrip(@PathVariable Long idVoyage, Authentication authentication) {
+         List<InvitationResponse> response = invitationService.getAcceptedInvitationsByVoyage(idVoyage);
+        //TODO
+        //mettre un bout de code qui permets de vérifier que la personne qui demande fait partie du voyage
+
+        //if (isAdmin||isDestinatary) {   
+        return ResponseEntity.ok(response);
+            //}
+        //return ResponseEntity.status(403).build();
+    }
+ 
 }

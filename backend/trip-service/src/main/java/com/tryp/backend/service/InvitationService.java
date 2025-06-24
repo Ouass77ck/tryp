@@ -86,5 +86,11 @@ public class InvitationService {
     List<Inviter> acceptedInvitations = inviterRepository.findByVoyage_IdVoyageAndStatus(idVoyage, "accepted");
     return acceptedInvitations.stream().map(this::mapToResponse).collect(Collectors.toList());
 }
+    public boolean isUserAcceptedInVoyage(Long userId, Long voyageId) {
+    return inviterRepository
+        .findByVoyage_IdVoyageAndStatus(voyageId, "accepted")
+        .stream()
+        .anyMatch(inv -> inv.getIdUserInvite().equals(userId));
+}
 
 }

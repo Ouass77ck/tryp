@@ -5,6 +5,7 @@ import com.tryp.backend.dto.VoyageResponse;
 import com.tryp.backend.dto.ActivityRequest;
 import com.tryp.backend.model.Voyage;
 import com.tryp.backend.service.VoyageService;
+import com.tryp.backend.service.InvitationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class VoyageController {
 
     private final VoyageService voyageService;
+    private final InvitationService invitationService;
 
     // 🔹 Créer un voyage
     @PostMapping("/creation")
@@ -49,10 +51,29 @@ public class VoyageController {
     // 🔹 Obtenir un voyage par ID
     @GetMapping("/{id}/get")
     public ResponseEntity<VoyageResponse> getVoyageById(@PathVariable Long id, Authentication authentication) {
-        Optional<Voyage> voyage = voyageService.getVoyageById(id);
-            return voyage.map(value -> ResponseEntity.ok(convertToResponse(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Voyage> existingVoyage = voyageService.getVoyageById(id);
+
+        if (existingVoyage.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Voyage voyage = existingVoyage.get();
+        Long currentUserId = Long.valueOf(authentication.getName());
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        boolean isOwner = currentUserId.equals(voyage.getIdUser());
+
+        boolean isInvited = invitationService.isUserAcceptedInVoyage(currentUserId, voyage.getIdVoyage());
+
+        if (isAdmin || isOwner || isInvited) {
+            return ResponseEntity.ok(convertToResponse(voyage));
+        }
+
+        return ResponseEntity.status(403).build();
     }
+
 
     // 🔹 Mettre à jour un voyage
     @PutMapping("/{id}/put")
