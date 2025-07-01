@@ -19,31 +19,31 @@ public class VoteController {
     }
 
     @PostMapping
-    public ResponseEntity<VoteResponse> createVote(@RequestBody VoteRequest request) {
+    public ResponseEntity<VoteResponse> createVote(@RequestBody VoteRequest request, Authentication authentication) {
         VoteResponse response = voteService.createVote(request);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<VoteResponse> getVote(@RequestParam Long idUser, @RequestParam Long idActivity) {
+    public ResponseEntity<VoteResponse> getVote(@RequestParam Long idUser, @RequestParam Long idActivity, Authentication authentication) {
         VoteResponse response = voteService.getVote(idUser, idActivity);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteVote(@RequestParam Long idUser, @RequestParam Long idActivity) {
+    public ResponseEntity<Void> deleteVote(@RequestParam Long idUser, @RequestParam Long idActivity, Authentication authentication) {
         voteService.deleteVote(idUser, idActivity);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/activity/{idActivity}")
-    public ResponseEntity<List<VoteResponse>> getVotesByActivity(@PathVariable Long idActivity) {
+    public ResponseEntity<List<VoteResponse>> getVotesByActivity(@PathVariable Long idActivity, Authentication authentication) {
         List<VoteResponse> votes = voteService.getVotesByActivity(idActivity);
         return ResponseEntity.ok(votes);
     }
 
     @GetMapping("/activity/{idActivity}/score")
-    public ResponseEntity<Integer> getScoreByActivity(@PathVariable Long idActivity) {
+    public ResponseEntity<Integer> getScoreByActivity(@PathVariable Long idActivity, Authentication authentication) {
         Integer score = voteService.getScoreByActivity(idActivity);
         return ResponseEntity.ok(score);
     }

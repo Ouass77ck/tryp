@@ -56,7 +56,7 @@ public class InvitationController {
         InvitationResponse invit = invitationService.getInvitationById(invitationId);                                                                
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        boolean isDestinatary = authentication.getName().equals(invit.getIdUserInvite());
+        boolean isDestinatary = authentication.getName().equals(invit.getIdUserInvite().toString());
 
         if (isAdmin || isDestinatary)   {                                             
             InvitationResponse response = invitationService.updateInvitationStatus(invitationId, status);
