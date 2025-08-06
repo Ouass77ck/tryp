@@ -1,0 +1,22 @@
+<mat-card class="invitations-card">
+  <h2>Invitations</h2>
+
+  <div *ngIf="invitations.length > 0; else noInvitations">
+    <div class="invitation-list">
+      <div class="invitation-item" *ngFor="let invitation of invitations; trackBy: trackByInvitation">
+        <img class="avatar" [src]="invitation.picture" alt="avatar">
+        <div class="username">{{ invitation.username }}</div>
+        <div class="actions">
+          <img class="icon accept" src="/accept.png" alt="accept" (click)="acceptInvitation(invitation.id)">
+          <img class="icon reject" src="/refuse.png" alt="refuse" (click)="rejectInvitation(invitation.id)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noInvitations>
+    <div class="no-invitations-message">
+      Aucune nouvelle invitation!
+    </div>
+  </ng-template>
+</mat-card>
