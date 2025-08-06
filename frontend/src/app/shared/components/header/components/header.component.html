@@ -1,1 +1,14 @@
-<h1>HEADER</h1>
+<div class="header-bar">
+  <div class="spacer"></div>
+
+  <div class="user-section" (click)="toggleMenu()">
+    <img [src]="user.avatar" class="avatar" alt="avatar">
+    <span class="username">{{ user.username }}</span>
+
+    <div class="dropdown-menu" *ngIf="menuOpen">
+      <div class="menu-item" (click)="onNavigate('settings')">Paramètres</div>
+      <div class="menu-item" (click)="onNavigate('profile')">Mes informations</div>
+      <div class="menu-item" (click)="onNavigate('logout')">Se déconnecter</div>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,20 @@
-<h1>SIDEBAR</h1>
+<aside class="sidebar">
+  <div class="logo-container">
+    <img src="/logo-tryp.png" alt="Tryp Logo" class="logo" />
+  </div>
+
+  <button mat-flat-button color="primary" class="new-trip-btn">
+    + Nouveau voyage
+  </button>
+
+  <nav class="nav-links">
+    <div
+      class="nav-item"
+      *ngFor="let item of navItems"
+      (click)="onNavigate(item.label)"
+    >
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span>{{ item.label }}</span>
+    </div>
+  </nav>
+</aside>

@@ -11,16 +11,16 @@ import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [DashboardComponent,
-    InvitationComponent
+    InvitationComponent,
+    UpcomingActivitiesComponent,
+    UpcomingTripsComponent
 ],
   imports: [
     CommonModule,
     DashboardRoutingModule,
     MatCardModule,
     HeaderComponent,
-    SidebarComponent,
-    UpcomingActivitiesComponent,
-    UpcomingTripsComponent,
+    SidebarComponent
   ]
 })
 

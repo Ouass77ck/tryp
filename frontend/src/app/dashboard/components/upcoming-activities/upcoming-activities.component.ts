@@ -1,9 +1,8 @@
 import { Component } from "@angular/core";
 
 @Component({
-    standalone: true,
+    standalone: false,
     selector: 'tryp-upcoming-activities',
-    imports: [],
     templateUrl: './upcoming-activities.component.html',
     styleUrl: './upcoming-activities.component.scss'
 })
