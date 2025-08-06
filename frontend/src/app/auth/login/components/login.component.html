@@ -1,0 +1,40 @@
+<div class="login-page">
+  <div class="logo">
+    <img src="/logo-tryp.png" alt="tryp logo" />
+  </div>
+
+  <h1>Contents de vous revoir!</h1>
+
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Votre email</mat-label>
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        required
+        matInput
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Votre mot de passe</mat-label>
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        required
+        matInput
+      />
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" class="submit-btn" [disabled]="!loginForm.form.valid">
+      Se connecter
+    </button>
+  </form>
+
+  <footer>
+    <a href="#">Mentions légales</a>
+    <a href="#">Contact</a>
+  </footer>
+</div>
