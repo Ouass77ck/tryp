@@ -1,1 +1,28 @@
-<h1>Activités à venir</h1>
+<mat-card class="activities-wrapper">
+  <h2>Activités à venir</h2>
+  <div class="activity-list">
+    <div class="activity-card" *ngFor="let a of activities; trackBy: trackByActivity">
+      <div class="title"><strong>{{ a.title }}</strong></div>
+
+      <div class="info">
+        <div class="item">
+          <mat-icon>calendar_today</mat-icon>
+          {{ a.date }}
+        </div>
+        <div class="item">
+          <mat-icon>schedule</mat-icon>
+          {{ a.time }}
+        </div>
+        <div class="item">
+          <mat-icon>hourglass_empty</mat-icon>
+          {{ a.duration }}
+        </div>
+      </div>
+
+      <div class="location">
+        <mat-icon>location_on</mat-icon>
+        <span class="address">{{ a.location }}</span>
+      </div>
+    </div>
+  </div>
+</mat-card>

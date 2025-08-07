@@ -1,0 +1,79 @@
+.activities-wrapper {
+  padding: 20px;
+   background-color: #ffffff;
+}
+
+.activity-list {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 10px 0;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+.activity-card {
+  flex: 0 0 auto;
+  width: 480px;
+  height: 150px;
+  padding: 40px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .title {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .info {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 14px;
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    mat-icon {
+      font-size: 18px;
+    }
+  }
+
+  .location {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    gap: 5px;
+
+    .address {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    mat-icon {
+      font-size: 18px;
+    }
+  }
+}

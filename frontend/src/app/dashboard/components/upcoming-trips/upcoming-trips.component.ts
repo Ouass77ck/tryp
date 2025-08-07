@@ -1,4 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
+import { Trip } from "../../../models/trip.model";
+import { TripService } from "../../../services/trips.services";
 
 @Component ({
     standalone: false,
@@ -7,6 +9,17 @@ import { Component } from "@angular/core";
     styleUrl: './upcoming-trips.component.scss'
 })
 
-export class UpcomingTripsComponent{
+export class UpcomingTripsComponent implements OnInit{
+    trips!: Trip[];
+    constructor(private tripService: TripService){
 
+    }
+    ngOnInit(): void{
+        this.trips = this.tripService.getTrips();
+    }
+
+
+    trackByTrip(index: number, trip: Trip): string {
+        return trip.id;
+    }
 }

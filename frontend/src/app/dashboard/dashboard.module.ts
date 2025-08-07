@@ -8,6 +8,7 @@ import { UpcomingActivitiesComponent } from './components/upcoming-activities/up
 import { UpcomingTripsComponent } from './components/upcoming-trips/upcoming-trips.component';
 import { InvitationComponent } from './components/invitations/invitations.component';
 import {MatCardModule} from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [DashboardComponent,
@@ -20,7 +21,8 @@ import {MatCardModule} from '@angular/material/card';
     DashboardRoutingModule,
     MatCardModule,
     HeaderComponent,
-    SidebarComponent
+    SidebarComponent,
+    MatIconModule
   ]
 })
 

@@ -1,7 +1,10 @@
-export interface Trip {
-  id: number;
-  destination: string;
-  startDate: string;
-  endDate: string;
-  admin: string;
+export class Trip {
+  id: string;
+ constructor(public destination: string,
+  public  startDate: string,
+  public endDate: string,
+  public admin: string)
+  {
+    this.id = crypto.randomUUID();
+  }
 }

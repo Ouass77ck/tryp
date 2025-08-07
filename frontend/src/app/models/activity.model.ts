@@ -1,8 +1,12 @@
-export interface Activity {
-  id: number;
-  title: string;
-  date: string;
-  time: string;
-  duration: string;
-  location: string;
+export class Activity {
+  id: string;
+ constructor(public title: string,
+    public  date: string,
+    public time: string,
+    public duration: string,
+    public location: string
+ )
+  {
+    this.id = crypto.randomUUID();
+  }
 }

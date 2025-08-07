@@ -1,9 +1,13 @@
 .invitations-card {
+  height: 300px;
   padding: 20px;
+  background-color: #ffffff;
+
+
+  
 }
 
 .invitation-list {
-  max-height: 250px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;

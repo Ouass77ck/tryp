@@ -1,1 +1,15 @@
-<h1>Voyagesà venir</h1>
+<mat-card class="trips-wrapper">
+  <h2>Voyages à venir</h2>
+  <div class="trip-list">
+    <div
+      class="trip-card"
+      *ngFor="let trip of trips; let i = index"
+      [ngClass]="'color-' + (i % 3)"
+    >
+      <div class="destination"><strong>{{ trip.destination }}</strong></div>
+      <div class="date">Du {{ trip.startDate }}</div>
+      <div class="date">Au {{ trip.endDate}}</div>
+      <div class="admin"><strong>Admin:</strong> {{ trip.admin }}</div>
+    </div>
+  </div>
+</mat-card>

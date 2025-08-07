@@ -1,5 +1,18 @@
-<tryp-header/>
-<tryp-sidebar/>
-<tryp-upcoming-activities/>
-<tryp-upcoming-trips/>
-<tryp-invitations/>
+<div class="dashboard-container">
+  <tryp-header></tryp-header>
+
+  <div class="dashboard-body">
+    <tryp-sidebar></tryp-sidebar>
+
+    <div class="dashboard-content">
+      <div class="top-section">
+        <tryp-upcoming-trips class="trips"></tryp-upcoming-trips>
+        <tryp-invitations class="invitations"></tryp-invitations>
+      </div>
+
+      <div class="bottom-section">
+        <tryp-upcoming-activities></tryp-upcoming-activities>
+      </div>
+    </div>
+  </div>
+</div>

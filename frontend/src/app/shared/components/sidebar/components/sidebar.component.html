@@ -8,13 +8,15 @@
   </button>
 
   <nav class="nav-links">
-    <div
-      class="nav-item"
+    <a
       *ngFor="let item of navItems"
-      (click)="onNavigate(item.label)"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-item"
     >
       <mat-icon>{{ item.icon }}</mat-icon>
       <span>{{ item.label }}</span>
-    </div>
+    </a>
   </nav>
 </aside>

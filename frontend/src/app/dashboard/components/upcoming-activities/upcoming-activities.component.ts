@@ -1,4 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
+import { Activity } from "../../../models/activity.model";
+import { ActivityService } from "../../../services/activity.service";
 
 @Component({
     standalone: false,
@@ -7,6 +9,18 @@ import { Component } from "@angular/core";
     styleUrl: './upcoming-activities.component.scss'
 })
 
-export class UpcomingActivitiesComponent{
-    
+export class UpcomingActivitiesComponent implements OnInit{
+    activities!: Activity[];
+    constructor(private activityService: ActivityService){
+
+    }
+    ngOnInit(): void{
+        this.activities = this.activityService.getActivities();
+    }
+
+
+    trackByActivity(index: number, activity: Activity): string {
+        return activity.id;
+    }
 }
+
